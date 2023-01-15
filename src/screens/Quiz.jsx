@@ -10,14 +10,13 @@ const Quiz = ({ navigation }) => {
   const [currentOptions, setCurrentOptions] = useState([]);
   const [answer, setAnswer] = useState("");
   const [selected, setSelected] = useState("");
-
   const { score, setScore } = useContext(ScoreContext);
-
   useEffect(() => {
     (async () => {
+        console.log('visited to quiz')
       let data = await (
         await fetch(
-          "https://opentdb.com/api.php?amount=10&category=23&difficulty=medium&type=multiple&encode=url3986"
+          "https://opentdb.com/api.php?amount=20&category=18&type=multiple&encode=url3986"
         )
       ).json();
       setTimeout(() => {
@@ -26,6 +25,7 @@ const Quiz = ({ navigation }) => {
         setCurrentOptions(getoptions(data.results[count]));
       }, 1000);
     })();
+    return location.reload()
   }, []);
   function getoptions(cq) {
     let options = [cq.correct_answer, ...cq.incorrect_answers];
@@ -48,8 +48,8 @@ const Quiz = ({ navigation }) => {
   const handleNext = () => {
     if (selected.length > 0) {
       setCount((count) => count + 1);
-      setCurrentQuestion(questions[count].question);
-      setCurrentOptions(getoptions(questions[count]));
+      setCurrentQuestion(questions[count+1].question);
+      setCurrentOptions(getoptions(questions[count+1]));
 
       if (selected == answer) {
         setScore((score) => score + 1);
@@ -59,8 +59,8 @@ const Quiz = ({ navigation }) => {
   };
   const handleSkip = () => {
     setCount((count) => count + 1);
-    setCurrentQuestion(questions[count].question);
-    setCurrentOptions(getoptions(questions[count]));
+    setCurrentQuestion(questions[count+1].question);
+    setCurrentOptions(getoptions(questions[count+1]));
   };
 
   return (
@@ -108,12 +108,12 @@ const Quiz = ({ navigation }) => {
             <TouchableOpacity style={styles.button} onPress={handleSkip}>
               <Text style={styles.buttontext}>SKIP</Text>
             </TouchableOpacity>
-            {count !== questions.length && (
+            {count !== questions.length-1 && (
               <TouchableOpacity style={styles.button} onPress={handleNext}>
                 <Text style={styles.buttontext}>NEXT</Text>
               </TouchableOpacity>
             )}
-            {count == questions.length && (
+            {count == questions.length-1 && (
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => navigation.navigate("Result")}>
