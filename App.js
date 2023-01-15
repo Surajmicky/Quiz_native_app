@@ -4,11 +4,14 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import Navigation from './src/navigation/Navigation';
 
+import { ScoreProvider } from './src/context/ScoreContext';
 export default function App() {
   return (
+    <ScoreProvider>
     <NavigationContainer>
       <Navigation/>
     </NavigationContainer>
+    </ScoreProvider>
   );
 }
 
